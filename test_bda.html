@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test de personnalité Ghibli</title>
+    <meta
+      name="description"
+      content="Découvre quel personnage de Miyazaki te correspond le mieux !"
+    />
+    <style>
+      #background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        filter: blur(5px);
+      }
+
+      #background > img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      #background > img.small {
+        display: none;
+      }
+
+      body {
+        position: relative;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        color: black;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        padding: 20px;
+      }
+
+      .blurred {
+        filter: blur(5px);
+      }
+
+      #question-container {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: rgba(255, 255, 255);
+      }
+
+      @media (max-width: 600px) {
+        #question-container {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+
+      #result-image {
+        width: 100%;
+        max-width: max(500px, 40vw);
+        margin-top: 20px;
+        border-radius: 10px;
+      }
+
+      button {
+        background-color: rgba(81, 68, 68, 0.3);
+        color: rgba(255, 255, 255);
+        border: none;
+        border-radius: 20px;
+        padding: 15px 30px;
+        margin: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 18px;
+      }
+
+      #result-container {
+        display: none;
+        text-align: center;
+        margin-top: 50px;
+      }
+
+      #result {
+        font-size: 24px;
+        color: #ffffff;
+      }
+
+      button:hover {
+        background-color: rgba(153, 122, 65, 0.5);
+        transform: scale(1.1);
+        transition: transform 0.2s;
+      }
+
+      .question2 button:hover {
+        background-color: rgba(115, 219, 2, 0.5);
+      }
+
+      .question3 button:hover {
+        background-color: rgba(84, 167, 207, 0.5);
+      }
+
+      .question4 button:hover {
+        background-color: rgba(253, 62, 34, 0.5);
+      }
+
+      .question5 button:hover {
+        background-color: rgba(2, 83, 112, 0.5);
+      }
+
+      .question6 button:hover {
+        background-color: rgba(123, 155, 206, 0.5);
+      }
+
+      .question7 button:hover {
+        background-color: rgba(251, 120, 40, 0.5);
+      }
+
+      .question8 button:hover {
+        background-color: rgba(186, 104, 127, 0.5);
+      }
+
+      .question9 button:hover {
+        background-color: rgba(186, 70, 57, 0.5);
+      }
+
+      .question10 button:hover {
+        background-color: rgba(94, 147, 213, 0.5);
+      }
+    </style>
+  </head>
+  <body style="background-image: url('toto.jpg')">
+    <div id="background">
+      <img class="large" src="toto.jpg" alt="" />
+      <img class="small" src="bg-phone.webp" alt="" />
+    </div>
+    <div id="question-container" class="question1">
+      <!-- Questions will be inserted here -->
+    </div>
+
+    <div id="result-container" style="display: none">
+      <p id="result"></p>
+      <img id="result-image" alt="Result Image" />
+    </div>
+
+    <script>
+      console.log("JavaScript code is executing.")
+      var currentQuestion = 0
+
+      var questions = [
+        {
+          question:
+            "Si tu pouvais vivre n'importe où, quel endroit choisirais tu ?",
+          answers: [
+            {
+              text: "En ville",
+              categories: ["Chihiro", "Sans Visage", "Ashitaka"],
+            },
+            { text: "Au bord de la mer", categories: ["Ponyo", "Kiki"] },
+            {
+              text: "Dans la forêt",
+              categories: ["Princesse Mononoké", "Totoro"],
+            },
+            {
+              text: "A la campagne",
+              categories: ["Calcifer", "Sophie", "Howl"],
+            },
+          ],
+        },
+        {
+          question: "Quelle couleur préfères tu parmi celles ci ?",
+          answers: [
+            { text: "Rouge", categories: ["Chihiro", "Kiki", "Calcifer"] },
+            { text: "Vert", categories: ["Princesse Mononoké", "Totoro"] },
+            { text: "Bleu", categories: ["Ponyo", "Ashitaka", "Sophie"] },
+            { text: "Jaune", categories: ["Sans Visage", "Howl"] },
+          ],
+        },
+        {
+          question: "Si tu devais te défendre, quel serait ton atout ?",
+          answers: [
+            { text: "Mes mains nues", categories: ["Chihiro", "Totoro"] },
+            {
+              text: "Des pouvoirs magiques",
+              categories: ["Sans Visage", "Kiki", "Calcifer", "Howl"],
+            },
+            { text: "Le pouvoir de l'amitié", categories: ["Ponyo", "Sophie"] },
+            {
+              text: "Une arme tranchante",
+              categories: ["Princesse Mononoké", "Ashitaka"],
+            },
+          ],
+        },
+        {
+          question: "Quelle est ta nourriture préférée parmi ce qui suit ?",
+          answers: [
+            {
+              text: "Les haricots rouges",
+              categories: ["Chihiro", "Ashitaka", "Totoro"],
+            },
+            { text: "Le poisson", categories: ["Ponyo", "Kiki"] },
+            {
+              text: "La viande",
+              categories: ["Princesse Mononoké", "Sophie", "Howl"],
+            },
+            { text: "J'aime tout", categories: ["Sans Visage", "Calcifer"] },
+          ],
+        },
+        {
+          question:
+            "Quelle première impression donnes-tu aux autres en général ?",
+          answers: [
+            {
+              text: "J'ai l'air sympa",
+              categories: ["Chihiro", "Ponyo", "Ashitaka", ""],
+            },
+            { text: "J'ai l'air bizarre", categories: ["Sans Visage", "Howl"] },
+            {
+              text: "Je fais peur",
+              categories: ["Kiki", "Princesse Mononoké", "Totoro"],
+            },
+            {
+              text: "On ne me remarque pas",
+              categories: ["Sophie", "Calcifer"],
+            },
+          ],
+        },
+        {
+          question: "Quel animal préfères tu parmi les animaux suivants ?",
+          answers: [
+            { text: "Les poissons", categories: ["Chihiro", "Ponyo", ""] },
+            {
+              text: "Les humains",
+              categories: ["Sans Visage", "Calcifer", "Totoro"],
+            },
+            { text: "Les chats", categories: ["Kiki", "Princesse Mononoké"] },
+            { text: "Les chiens", categories: ["Ashitaka", "Sophie", "Howl"] },
+          ],
+        },
+        {
+          question: "Tu préfères le jour ou la nuit ?",
+          answers: [
+            {
+              text: "Le jour",
+              categories: [
+                "Chihiro",
+                "Ponyo",
+                "Ashitaka",
+                "Sophie",
+                "Calcifer",
+              ],
+            },
+            {
+              text: "La nuit",
+              categories: [
+                "Sans Visage",
+                "Kiki",
+                "Princesse Mononoké",
+                "Howl",
+                "Totoro",
+              ],
+            },
+          ],
+        },
+        {
+          question:
+            "Si tu jouais à un jeu de rôle, à quelle guilde appartiendrais-tu ?",
+          answers: [
+            {
+              text: "Guilde des commerçants",
+              categories: ["Chihiro", "Kiki", "Sophie"],
+            },
+            {
+              text: "Guilde des voleurs",
+              categories: ["Sans Visage", "Princesse Mononoké"],
+            },
+            {
+              text: "Guilde des magiciens",
+              categories: ["Ponyo", "Calcifer", "Howl"],
+            },
+            { text: "Guilde des gardes", categories: ["Ashitaka", "Totoro"] },
+          ],
+        },
+        {
+          question: "Qu'est ce que tu aimes faire de ton temps libre ?",
+          answers: [
+            { text: "Me balader", categories: ["Chihiro", "Ponyo", "Kiki"] },
+            { text: "Manger", categories: ["Sans Visage", "Calcifer"] },
+            {
+              text: "Me rendre utile",
+              categories: ["Princesse Mononoké", "Ashitaka", "Sophie"],
+            },
+            { text: "Dormir", categories: ["Howl", "Totoro"] },
+          ],
+        },
+        {
+          question: "Quelle valeur te tiens le plus au coeur ?",
+          answers: [
+            { text: "Egalité", categories: ["Chihiro", "Sophie"] },
+            {
+              text: "Liberté",
+              categories: [
+                "Sans Visage",
+                "Kiki",
+                "Princesse Mononoké",
+                "Calcifer",
+                "Howl",
+              ],
+            },
+            { text: "Fraternité", categories: ["Ponyo", "Ashitaka", "Totoro"] },
+          ],
+        },
+        {
+          question: "Tu te sens comment dans la vie ?",
+          answers: [
+            { text: "Mélancolique", categories: ["Chihiro", "Sans Visage"] },
+            { text: "Joyeux", categories: ["Ponyo", "Kiki", "Howl"] },
+            {
+              text: "Révolté",
+              categories: ["Princesse Mononoké", "Ashitaka", "Calcifer"],
+            },
+            { text: "Serein", categories: ["Sophie", "Totoro"] },
+          ],
+        },
+      ]
+
+      var categoryScores = {}
+
+      function displayQuestion() {
+        var questionContainer = document.getElementById("question-container")
+        questionContainer.className = "question" + (currentQuestion + 1)
+        var questionObj = questions[currentQuestion]
+        questionContainer.innerHTML = "<p>" + questionObj.question + "</p>"
+
+        var body = document.body
+        var backgroundImage = document.querySelector("#background > img.large")
+        switch (currentQuestion) {
+          case 0:
+            backgroundImage.setAttribute("src", "toto.jpg")
+            break
+          case 1:
+            backgroundImage.setAttribute("src", "howlp.jpg")
+            break
+
+          case 2:
+            backgroundImage.setAttribute("src", "chihirop.jpg")
+            break
+          case 3:
+            backgroundImage.setAttribute("src", "porcorossop.jpg")
+            break
+          case 4:
+            backgroundImage.setAttribute("src", "mononokep.jpg")
+            break
+          case 5:
+            backgroundImage.setAttribute("src", "kikip.jpg")
+            break
+          case 6:
+            backgroundImage.setAttribute("src", "ponyop.jpg")
+            break
+          case 7:
+            backgroundImage.setAttribute("src", "windrisep.jpg")
+            break
+          case 8:
+            backgroundImage.setAttribute("src", "mononokep2.jpg")
+            break
+          case 9:
+            backgroundImage.setAttribute("src", "chihirop2.jpg")
+            break
+          case 10:
+            backgroundImage.setAttribute("src", "totorop2.jpg")
+            break
+        }
+
+        var answersHTML = ""
+        questionObj.answers.forEach(function (answer) {
+          answersHTML +=
+            "<button onclick=\"selectAnswer('" +
+            answer.categories.join(",") +
+            "')\">" +
+            answer.text +
+            "</button>"
+        })
+        questionContainer.innerHTML += answersHTML
+      }
+
+      function selectAnswer(categories) {
+        var selectedCategories = categories.split(",")
+        selectedCategories.forEach(function (category) {
+          if (categoryScores.hasOwnProperty(category)) {
+            categoryScores[category]++
+          } else {
+            categoryScores[category] = 1
+          }
+        })
+
+        currentQuestion++
+        if (currentQuestion < questions.length) {
+          displayQuestion()
+        } else {
+          displayResult()
+        }
+      }
+
+      function displayResult() {
+        var questionContainer = document.getElementById("question-container")
+        var resultContainer = document.getElementById("result-container")
+
+        questionContainer.style.display = "none"
+
+        resultContainer.style.display = "block"
+
+        var result = document.getElementById("result")
+        var resultImage = document.getElementById("result-image")
+
+        var maxCategory = Object.keys(categoryScores).reduce(function (a, b) {
+          return categoryScores[a] > categoryScores[b] ? a : b
+        })
+
+        result.innerHTML = "Ton personnage Ghibli est : " + maxCategory
+        switch (maxCategory) {
+          case "Chihiro":
+            resultImage.src = "chihiro.png"
+            break
+          case "Sans Visage":
+            resultImage.src = "sans-visage.jpg"
+            break
+          case "Ponyo":
+            resultImage.src = "ponyo.jpg"
+            break
+          case "Kiki":
+            resultImage.src = "Kiki.jpg"
+            break
+          case "Princesse Mononoké":
+            resultImage.src = "mononoke.jpg"
+            break
+          case "Ashitaka":
+            resultImage.src = "Ashitaka.jpg"
+            break
+          case "Sophie":
+            resultImage.src = "Sophie.jpg"
+            break
+          case "Calcifer":
+            resultImage.src = "Calcifer.jpg"
+            break
+          case "Howl":
+            resultImage.src = "Howl.jpg"
+            break
+          case "Totoro":
+            resultImage.src = "Totoro.jpg"
+            break
+          default:
+            resultImage.src = "default_bg.jpg"
+            break
+        }
+      }
+
+      displayQuestion()
+    </script>
+  </body>
+</html>
